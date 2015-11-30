@@ -192,14 +192,23 @@ if __name__ == '__main__':
       extra_compile_args.append('-Werror')
       sys.argv.remove(warnings_as_errors)
 
+    extra_objects = []
+    libraries = []
+    for arg in sys.argv[:]:
+      if arg.startswith('--link-libprotobuf-static'):
+        sys.argv.remove(arg)
+        extra_objects.append(arg.split('=')[-1])
+    if not extra_objects:
+      libraries = ['protobuf']
+
     # C++ implementation extension
     ext_module_list.extend([
         Extension(
             "google.protobuf.pyext._message",
             glob.glob('google/protobuf/pyext/*.cc'),
             include_dirs=[".", "../src"],
-            libraries=libraries,
             extra_objects=extra_objects,
+            libraries=libraries,
             library_dirs=['../src/.libs'],
             extra_compile_args=extra_compile_args,
         ),
