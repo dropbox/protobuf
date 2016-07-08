@@ -1,0 +1,27 @@
+package(default_visibility = ['//visibility:public'])
+
+load('/build_tools/bazel/py', 'dbx_py_local_piplib')
+
+dbx_py_local_piplib(
+  name = 'pyprotobuf',
+  srcs = glob(['**/*.*']),
+  global_options = [
+    '--cpp_implementation',
+    '--link-libprotobuf-static=$(ROOT)/$(location //thirdparty/protobuf:protobuf)',
+    '--link-libprotobuf-static=$(ROOT)/$(location //thirdparty/protobuf:protobuf_lite)',
+    # setup.py tries to make sure ../src is on the include path. This doesn't work because pip
+    # builds the extension outside of the tree, so we manually add the right include path.
+    'build_ext', '--include-dirs=$(ROOT)/thirdparty/protobuf/src',
+  ],
+  deps = [
+    '//thirdparty/protobuf:protobuf',
+    '//thirdparty/protobuf:protobuf_lite',
+    '//thirdparty/protobuf:protoc',
+    '//pip/six',
+  ],
+  env = {
+    'PROTROOT': '$(ROOT)/thirdparty/protobuf/src/',
+    'PROTOC': '$(ROOT)/$(location //thirdparty/protobuf:protoc)',
+  },
+  provides = ['google.protobuf', 'google.protobuf.descriptor'],
+)

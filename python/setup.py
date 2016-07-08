@@ -51,6 +51,10 @@ def generate_proto(source, require = True):
   .proto file.  Does nothing if the output already exists and is newer than
   the input."""
 
+  protroot = os.environ.get("PROTROOT")
+  if protroot is not None:
+    source = source.replace("../src/", protroot)
+
   if not require and not os.path.exists(source):
     return
 
@@ -72,6 +76,8 @@ def generate_proto(source, require = True):
       sys.exit(-1)
 
     protoc_command = [ protoc, "-I../src", "-I.", "--python_out=.", source ]
+    if protroot is not None:
+      protoc_command.append("-I" + protroot)
     if subprocess.call(protoc_command) != 0:
       sys.exit(-1)
 
