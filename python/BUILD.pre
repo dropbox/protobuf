@@ -1,21 +1,32 @@
 package(default_visibility = ['//visibility:public'])
 
+load('/build_tools/bazel/cc', 'prefer_pic_library')
 load('/build_tools/bazel/py', 'dbx_py_local_piplib')
+
+prefer_pic_library(
+  name = 'protobuf',
+  library = '//thirdparty/protobuf:protobuf',
+)
+
+prefer_pic_library(
+  name = 'protobuf_lite',
+  library = '//thirdparty/protobuf:protobuf_lite',
+)
 
 dbx_py_local_piplib(
   name = 'pyprotobuf',
   srcs = glob(['**/*.*']),
   global_options = [
     '--cpp_implementation',
-    '--link-libprotobuf-static=$(ROOT)/$(location //thirdparty/protobuf:protobuf)',
-    '--link-libprotobuf-static=$(ROOT)/$(location //thirdparty/protobuf:protobuf_lite)',
+    '--link-libprotobuf-static=$(ROOT)/$(location :protobuf)',
+    '--link-libprotobuf-static=$(ROOT)/$(location :protobuf_lite)',
     # setup.py tries to make sure ../src is on the include path. This doesn't work because pip
     # builds the extension outside of the tree, so we manually add the right include path.
     'build_ext', '--include-dirs=$(ROOT)/thirdparty/protobuf/src',
   ],
   deps = [
-    '//thirdparty/protobuf:protobuf',
-    '//thirdparty/protobuf:protobuf_lite',
+    ':protobuf',
+    ':protobuf_lite',
     '//thirdparty/protobuf:protoc',
     '//pip/six',
   ],
