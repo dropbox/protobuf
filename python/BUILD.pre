@@ -27,8 +27,10 @@ dbx_py_local_piplib(
   deps = [
     ':protobuf',
     ':protobuf_lite',
-    '//thirdparty/protobuf:protoc',
     '//pip/six',
+    '//thirdparty/protobuf:protoc',
+    '//thirdparty/protobuf:test_protos',
+    '//thirdparty/protobuf:well_known_protos',
   ],
   env = {
     'PROTROOT': '$(ROOT)/thirdparty/protobuf/src/',

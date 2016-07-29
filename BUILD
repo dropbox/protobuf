@@ -398,6 +398,12 @@ RELATIVE_TEST_PROTOS = [
 
 TEST_PROTOS = ["src/" + s for s in RELATIVE_TEST_PROTOS]
 
+filegroup(
+    name = "test_protos",
+    srcs = TEST_PROTOS,
+    visibility = ["//visibility:public"],
+)
+
 cc_proto_library(
     name = "cc_test_protos",
     srcs = LITE_TEST_PROTOS + TEST_PROTOS,
