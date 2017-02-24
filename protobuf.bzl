@@ -88,13 +88,17 @@ _proto_gen = rule(
         "deps": attr.label_list(providers = ["proto"]),
         "includes": attr.string_list(),
         "protoc": attr.label(
-            cfg = HOST_CFG,
+            # bneuberg: Changed from HOST_CFG for bazel 0.4.3-2017-02-22 compat.
+            #cfg = HOST_CFG,
+            cfg = "host",
             executable = True,
             single_file = True,
             mandatory = True,
         ),
         "grpc_cpp_plugin": attr.label(
-            cfg = HOST_CFG,
+            # bneuberg: Changed from HOST_CFG for bazel 0.4.3-2017-02-22 compat.
+            #cfg = HOST_CFG,
+            cfg = "host",
             executable = True,
             single_file = True,
         ),
